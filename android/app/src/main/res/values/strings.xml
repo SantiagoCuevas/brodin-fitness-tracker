@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Brodin Fitness</string>
+    <string name="title_activity_main">Brodin Fitness</string>
+    <string name="package_name">com.mogware.brodin</string>
+    <string name="custom_url_scheme">com.mogware.brodin</string>
+</resources>
