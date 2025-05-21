@@ -1,7 +1,37 @@
-import { Group, Stack, Text, Title } from "@mantine/core";
+import { Group, Loader, Stack, Text, Title } from "@mantine/core";
 import type { FC } from "react";
 
+interface BasicInfoData {
+  id: string;
+  createdAt: string;
+  userId: string;
+  name: string;
+  displayName: string;
+  dob: string;
+  heightFeet: number;
+  heightInches: number;
+}
+
+interface BasicInfoResult {
+  data?: BasicInfoData;
+  loading: boolean;
+  error: any;
+}
+
+const useBasicInfo = (): BasicInfoResult => {
+  return {
+    loading: true,
+    error: null,
+  };
+};
+
 export const BasicInfo: FC = () => {
+  const { loading } = useBasicInfo();
+
+  if (loading) {
+    return <Loader />;
+  }
+
   return (
     <Stack>
       <InfoItem title="Name" value="Alexis" />
@@ -18,10 +48,12 @@ interface InfoItemProps {
 }
 
 const InfoItem: FC<InfoItemProps> = (props) => {
+  const { title, value } = props;
+
   return (
     <Group align="center" justify="space-between" maw={350} px={10} py={5}>
-      <Title order={3}>{props.title}</Title>
-      <Text>{props.value}</Text>
+      <Title order={3}>{title}</Title>
+      <Text>{value}</Text>
     </Group>
   );
 };
