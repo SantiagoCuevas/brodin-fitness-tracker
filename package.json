@@ -13,8 +13,10 @@
     "@capacitor/android": "^7.2.0",
     "@capacitor/core": "^7.2.0",
     "@capacitor/ios": "^7.2.0",
+    "@tailwindcss/vite": "^4.1.7",
     "react": "^19.1.0",
-    "react-dom": "^19.1.0"
+    "react-dom": "^19.1.0",
+    "tailwindcss": "^4.1.7"
   },
   "devDependencies": {
     "@capacitor/cli": "^7.2.0",
