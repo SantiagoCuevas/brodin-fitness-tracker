@@ -1,3 +1,5 @@
+import { Title } from "@mantine/core";
+
 export const Settings = () => {
-  return null;
+  return <Title>Settings</Title>;
 };
