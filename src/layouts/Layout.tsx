@@ -1,16 +1,27 @@
-import { Button, Group } from "@mantine/core";
-import type { FC } from "react";
-import { NavLink, Outlet } from "react-router";
+import { ActionIcon, Button, Group } from '@mantine/core';
+import type { FC } from 'react';
+import { NavLink, Outlet } from 'react-router';
+import {
+  IconAdjustments,
+  IconBarbell,
+  IconChartLine,
+  IconClipboardList,
+  IconSettings,
+} from '@tabler/icons-react';
+import { NavIcon } from '../components/NavIcon';
 
 export const Layout: FC = () => {
   return (
     <>
       <Outlet />
-      <Group>
-        <NavLink to="/">Home</NavLink>
-        <NavLink to="/info">Info</NavLink>
-        <NavLink to="/settings">Settings</NavLink>
-      </Group>
+      <div className="absolute bottom-[20px] w-full px-[40px]">
+        <Group justify="space-between">
+          <NavIcon to="/" Icon={IconBarbell} label="Train" />
+          <NavIcon to="/analytics" Icon={IconChartLine} label="Analytics" />
+          <NavIcon to="/info" Icon={IconClipboardList} label="Info" />
+          <NavIcon to="/settings" Icon={IconSettings} label="Settings" />
+        </Group>
+      </div>
     </>
   );
 };
