@@ -5,15 +5,15 @@ import { Settings } from "./pages/Settings";
 import { Layout } from "../layouts/Layout";
 
 export const Router = () => {
-    return (
-        <BrowserRouter>
-        <Routes>
-          <Route element={<Layout />}>
-            <Route path="/" element={<Home />} />
-            <Route path="/info" element={<Info />} />
-            <Route path="/settings" element={<Settings />} />
-          </Route>
-        </Routes>
-      </BrowserRouter>
-    );
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route element={<Layout />}>
+          <Route path="/" element={<Home />} />
+          <Route path="/info" element={<Info />} />
+          <Route path="/settings" element={<Settings />} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
+  );
 };

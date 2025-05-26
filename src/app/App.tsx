@@ -1,5 +1,3 @@
-import { MantineProvider } from "@mantine/core";
-
 import "./index.css";
 import "@mantine/core/styles.css";
 import { useAuthSession } from "../hooks/useAuthSession";
@@ -7,6 +5,7 @@ import { Auth } from "@supabase/auth-ui-react";
 import { supabaseClient } from "./supabaseClient";
 import { ThemeSupa } from "@supabase/auth-ui-shared";
 import { Router } from "./Router";
+import { Providers } from "./Providers";
 
 function App() {
   const session = useAuthSession();
@@ -18,9 +17,9 @@ function App() {
   }
 
   return (
-    <MantineProvider>
+    <Providers>
       <Router />
-    </MantineProvider>
+    </Providers>
   );
 }
 
