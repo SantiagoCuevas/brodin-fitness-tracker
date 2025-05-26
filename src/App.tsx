@@ -6,8 +6,20 @@ import { Home } from "./pages/Home";
 import { Info } from "./pages/Info";
 import { Settings } from "./pages/Settings";
 import { Layout } from "./layouts/Layout";
+import { useAuthSession } from "./hooks/useAuthSession";
+import { Auth } from "@supabase/auth-ui-react";
+import { supabaseClient } from "./supabaseClient";
+import { ThemeSupa } from "@supabase/auth-ui-shared";
 
 function App() {
+  const session = useAuthSession();
+
+  if (!session) {
+    return (
+      <Auth supabaseClient={supabaseClient} appearance={{ theme: ThemeSupa }} />
+    );
+  }
+
   return (
     <MantineProvider>
       <BrowserRouter>
