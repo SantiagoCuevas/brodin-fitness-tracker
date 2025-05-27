@@ -3,6 +3,7 @@ import { useCallback } from 'react';
 import { supabaseClient } from '../supabaseClient';
 import { useNavigate } from 'react-router';
 import { MainPage } from '../../components/MainPage';
+import { DarkModeSwitch } from '../../features/settings/components/DarkModeSwitch';
 
 export const Settings = () => {
   const navigate = useNavigate();
@@ -17,6 +18,7 @@ export const Settings = () => {
 
   return (
     <MainPage title="Settings">
+      <DarkModeSwitch />
       <Button size="sm" onClick={onSignout}>
         Log Out
       </Button>
