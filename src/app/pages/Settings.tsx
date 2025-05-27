@@ -18,7 +18,7 @@ export const Settings = () => {
   return (
     <MainPage title="Settings">
       <Button size="sm" onClick={onSignout}>
-        Log Out{' '}
+        Log Out
       </Button>
     </MainPage>
   );
