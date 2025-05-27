@@ -10,7 +10,6 @@ import { Center, Loader, Title } from '@mantine/core';
 
 function App() {
   const { session, loading, error } = useAuthSession();
-  console.log('zz loading stuff', { session, loading });
 
   if (loading) {
     return (
