@@ -1,15 +1,16 @@
 import { Title } from '@mantine/core';
-import { FC } from 'react';
+import { FC, PropsWithChildren } from 'react';
 
 interface MainPageProps {
   title: string;
 }
 
-const MainPage: FC<MainPageProps> = (props) => {
-  const { title } = props;
+export const MainPage: FC<MainPageProps & PropsWithChildren> = (props) => {
+  const { title, children } = props;
   return (
-    <div>
+    <div className="flex flex-col p-[16px] pb-[76px]">
       <Title order={1}>{title}</Title>
+      {children}
     </div>
   );
 };

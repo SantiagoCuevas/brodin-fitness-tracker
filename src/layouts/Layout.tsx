@@ -14,7 +14,7 @@ export const Layout: FC = () => {
   return (
     <>
       <Outlet />
-      <div className="absolute bottom-[20px] w-full px-[40px]">
+      <div className=" fixed bottom-[20px] w-full px-[40px]">
         <Group justify="space-between">
           <NavIcon to="/" Icon={IconBarbell} label="Train" />
           <NavIcon to="/analytics" Icon={IconChartLine} label="Analytics" />
