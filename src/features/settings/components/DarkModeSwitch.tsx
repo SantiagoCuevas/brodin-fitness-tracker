@@ -1,5 +1,13 @@
-import { Switch } from '@mantine/core';
+import { Switch, useMantineColorScheme } from '@mantine/core';
 
 export const DarkModeSwitch = () => {
-  return <Switch label="Dark Mode" size="lg" />;
+  const { colorScheme, setColorScheme } = useMantineColorScheme();
+  return (
+    <Switch
+      checked={colorScheme === 'dark'}
+      label="Dark Mode"
+      size="lg"
+      onClick={() => setColorScheme(colorScheme === 'dark' ? 'light' : 'dark')}
+    />
+  );
 };
