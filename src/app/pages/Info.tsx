@@ -1,5 +1,5 @@
-import { Title } from "@mantine/core";
+import { MainPage } from '../../components/MainPage';
 
 export const Info = () => {
-  return <Title>Info</Title>;
+  return <MainPage title="Info"></MainPage>;
 };

@@ -1,4 +1,4 @@
-import { Button, Stack, Title } from '@mantine/core';
+import { Button } from '@mantine/core';
 import { useCallback } from 'react';
 import { supabaseClient } from '../supabaseClient';
 import { useNavigate } from 'react-router';
@@ -13,7 +13,7 @@ export const Settings = () => {
     } catch (error) {
       console.error('Error signing out:', error);
     }
-  }, []);
+  }, [navigate]);
 
   return (
     <MainPage title="Settings">
