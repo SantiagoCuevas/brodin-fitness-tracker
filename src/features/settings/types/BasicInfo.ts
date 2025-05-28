@@ -8,3 +8,11 @@ export interface BasicInfo {
   height_feet: number | null;
   height_inches: number | null;
 }
+
+export interface BasicInfoUpdate {
+  name?: string;
+  display_name?: string;
+  dob?: string; // YYYY-MM-DD
+  height_feet?: number;
+  height_inches?: number;
+}
