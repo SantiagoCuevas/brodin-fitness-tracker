@@ -20,8 +20,13 @@ export const Settings = () => {
   return (
     <MainPage title="Settings">
       <DarkModeSwitch />
+      <MenuLink
+        title="Account Info"
+        onClick={() => {
+          console.log('Onclick');
+        }}
+      />
 
-      <MenuLink></MenuLink>
       <Button size="sm" onClick={onSignout}>
         Log Out
       </Button>
