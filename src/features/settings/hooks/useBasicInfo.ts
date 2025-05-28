@@ -1,5 +1,5 @@
 import useSWR from 'swr';
-import { fetchBasicInfoForCurrentUser } from '../api/fetchBasicInfo';
+import { fetchBasicInfoForCurrentUser } from '../api/basicInfo';
 import { BasicInfo } from '../types/BasicInfo';
 
 export function useBasicInfo() {
