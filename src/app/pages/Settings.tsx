@@ -1,12 +1,14 @@
-import { Button } from '@mantine/core';
+import { Button, Modal } from '@mantine/core';
 import { useCallback } from 'react';
 import { supabaseClient } from '../supabaseClient';
 import { useNavigate } from 'react-router';
 import { MainPage } from '../../components/MainPage';
 import { DarkModeSwitch } from '../../features/settings/components/DarkModeSwitch';
 import { MenuLink } from '../../components/MenuLink';
+import { useDisclosure } from '@mantine/hooks';
 
 export const Settings = () => {
+  const [opened, { open, close }] = useDisclosure(false);
   const navigate = useNavigate();
   const onSignout = useCallback(async () => {
     try {
@@ -20,16 +22,15 @@ export const Settings = () => {
   return (
     <MainPage title="Settings">
       <DarkModeSwitch />
-      <MenuLink
-        title="Account Info"
-        onClick={() => {
-          console.log('Onclick');
-        }}
-      />
+      <MenuLink title="Account Info" onClick={open} />
 
       <Button size="sm" onClick={onSignout}>
         Log Out
       </Button>
+
+      <Modal fullScreen opened={opened} onClose={close} title="Account Info">
+        {/* Modal content */}
+      </Modal>
     </MainPage>
   );
 };
