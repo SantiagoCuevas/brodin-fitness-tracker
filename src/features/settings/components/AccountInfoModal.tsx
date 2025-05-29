@@ -12,7 +12,7 @@ import { useBasicInfo } from '../hooks/useBasicInfo';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { BasicInfoUpdate } from '../types/BasicInfo';
 import { useUpdateBasicInfo } from '../hooks/useUpdateBasicInfo';
-import { Calendar } from '@mantine/dates';
+import DatePicker from 'react-datepicker';
 
 export const AccountInfoModal = () => {
   const { basicInfo, isLoading } = useBasicInfo();
@@ -28,6 +28,7 @@ export const AccountInfoModal = () => {
         defaultValues={{
           name: basicInfo.name || undefined,
           display_name: basicInfo.display_name || undefined,
+          dob: basicInfo.dob || undefined,
           height_feet: basicInfo.height_feet || undefined,
           height_inches: basicInfo.height_inches || undefined,
         }}
@@ -123,7 +124,16 @@ const AccountInfoEditor: FC<AccountInfoEditorProps> = (props) => {
         <Controller
           name="dob"
           control={control}
-          render={({ field }) => <Calendar />}
+          render={({ field }) => (
+            <Stack>
+              <Text size="sm">Date Of Birth</Text>
+              <DatePicker
+                selected={field.value ? new Date(field.value) : new Date()}
+                {...field}
+                onChange={(value) => field.onChange(value)}
+              />
+            </Stack>
+          )}
         />
 
         <Button type="submit">Submit</Button>
