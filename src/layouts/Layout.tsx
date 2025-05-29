@@ -1,8 +1,7 @@
-import { ActionIcon, Button, Group } from '@mantine/core';
+import { Group } from '@mantine/core';
 import type { FC } from 'react';
-import { NavLink, Outlet } from 'react-router';
+import { Outlet } from 'react-router';
 import {
-  IconAdjustments,
   IconBarbell,
   IconChartLine,
   IconClipboardList,
