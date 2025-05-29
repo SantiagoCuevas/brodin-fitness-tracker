@@ -1,11 +1,21 @@
-import { LoadingOverlay, Text } from '@mantine/core';
+import {
+  LoadingOverlay,
+  NumberInput,
+  Stack,
+  Text,
+  TextInput,
+} from '@mantine/core';
 import { IconEdit } from '@tabler/icons-react';
 import { FC, useState } from 'react';
 import { Button } from '@mantine/core';
 import { useBasicInfo } from '../hooks/useBasicInfo';
+import { Controller, SubmitHandler, useForm } from 'react-hook-form';
+import { BasicInfoUpdate } from '../types/BasicInfo';
+import { useUpdateBasicInfo } from '../hooks/useUpdateBasicInfo';
+import { Calendar } from '@mantine/dates';
 
 export const AccountInfoModal = () => {
-  const { basicInfo, isLoading, error } = useBasicInfo();
+  const { basicInfo, isLoading } = useBasicInfo();
   const [editMode, setEditMode] = useState(false);
 
   if (isLoading || !basicInfo) {
@@ -13,7 +23,16 @@ export const AccountInfoModal = () => {
   }
 
   if (editMode) {
-    return <AccountInfoEditer />;
+    return (
+      <AccountInfoEditor
+        defaultValues={{
+          name: basicInfo.name || undefined,
+          display_name: basicInfo.display_name || undefined,
+          height_feet: basicInfo.height_feet || undefined,
+          height_inches: basicInfo.height_inches || undefined,
+        }}
+      />
+    );
   }
   return (
     <div className="flex flex-col">
@@ -53,6 +72,62 @@ const AccountInfoDisplay: FC<AccountInfoDisplayProps> = (props) => {
   );
 };
 
-const AccountInfoEditer = () => {
-  return null;
+interface AccountInfoEditorProps {
+  defaultValues: BasicInfoUpdate;
+}
+
+const AccountInfoEditor: FC<AccountInfoEditorProps> = (props) => {
+  const { defaultValues } = props;
+  const { register, handleSubmit, control } = useForm<BasicInfoUpdate>({
+    defaultValues,
+  });
+  const { updateBasicInfo } = useUpdateBasicInfo();
+
+  const onSubmit: SubmitHandler<BasicInfoUpdate> = (data) =>
+    updateBasicInfo(data);
+
+  return (
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <Stack>
+        <TextInput label="Name" placeholder="John Doe" {...register('name')} />
+        <TextInput
+          label="Display Name"
+          placeholder="John Doe"
+          {...register('display_name')}
+        />
+
+        <Controller
+          name="height_feet"
+          control={control}
+          render={({ field }) => (
+            <NumberInput
+              {...field}
+              label="Height (ft)"
+              onChange={(value) => field.onChange(value)}
+            />
+          )}
+        />
+
+        <Controller
+          name="height_inches"
+          control={control}
+          render={({ field }) => (
+            <NumberInput
+              {...field}
+              label="Height (in)"
+              onChange={(value) => field.onChange(value)}
+            />
+          )}
+        />
+
+        <Controller
+          name="dob"
+          control={control}
+          render={({ field }) => <Calendar />}
+        />
+
+        <Button type="submit">Submit</Button>
+      </Stack>
+    </form>
+  );
 };

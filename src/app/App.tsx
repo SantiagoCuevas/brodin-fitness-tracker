@@ -1,5 +1,6 @@
 import './index.css';
 import '@mantine/core/styles.css';
+import '@mantine/dates/styles.css';
 import { useAuthSession } from '../hooks/useAuthSession';
 import { Auth } from '@supabase/auth-ui-react';
 import { supabaseClient } from './supabaseClient';
