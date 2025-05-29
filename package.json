@@ -10,7 +10,8 @@
     "lint": "eslint . --ext .ts,.tsx",
     "lint:fix": "eslint . --ext .ts,.tsx --fix",
     "format": "prettier --write \"src/**/*.{ts,tsx,css,md}\"",
-    "type-check": "tsc --noEmit"
+    "type-check": "tsc --noEmit",
+    "postbuild": "firebase deploy --token $FIREBASE_TOKEN"
   },
   "dependencies": {
     "@capacitor/android": "^7.2.0",
