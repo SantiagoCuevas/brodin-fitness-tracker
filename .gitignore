@@ -24,3 +24,5 @@ dist-ssr
 
 # Secrets
 *.env
+
+*.tsbuildinfo
