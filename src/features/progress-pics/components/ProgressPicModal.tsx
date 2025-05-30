@@ -32,6 +32,7 @@ export const ProgressPicModal: FC<ProgressPicModalProps> = ({
     right: null,
   });
   const [showComparisonView, setShowComparisonView] = useState(false);
+  const [search, setSearch] = useState('');
 
   const toggleComparison = (src: string) => {
     setShowComparisonView(false); // Reset view if modifying selection
@@ -56,6 +57,17 @@ export const ProgressPicModal: FC<ProgressPicModalProps> = ({
     setShowComparisonView(false);
   };
 
+  const allDates =
+    snapshots?.map((s) => formatDateToUSLong(s.created_at)) ?? [];
+
+  const filteredSnapshots = search
+    ? (snapshots?.filter((s) =>
+        formatDateToUSLong(s.created_at)
+          .toLowerCase()
+          .includes(search.toLowerCase())
+      ) ?? [])
+    : (snapshots ?? []);
+
   return (
     <Modal opened={opened} onClose={close} title="Progress Pictures" fullScreen>
       {isLoading ? (
@@ -71,6 +83,7 @@ export const ProgressPicModal: FC<ProgressPicModalProps> = ({
           </div>
 
           <Carousel
+            withIndicators
             className="flex-1"
             styles={{ indicator: { backgroundColor: '#888' } }}
           >
@@ -118,6 +131,7 @@ export const ProgressPicModal: FC<ProgressPicModalProps> = ({
                   <PlaceholderSlot />
                 )}
               </div>
+
               <div className="flex gap-3">
                 <Button
                   onClick={() => setShowComparisonView(true)}
@@ -131,9 +145,16 @@ export const ProgressPicModal: FC<ProgressPicModalProps> = ({
               </div>
             </div>
           )}
-          <Autocomplete label="Search by date" />
-          {snapshots?.length ? (
-            snapshots.map((s) =>
+
+          <Autocomplete
+            label="Search by date"
+            data={allDates}
+            value={search}
+            onChange={setSearch}
+            placeholder="e.g. May 2025"
+          />
+          {filteredSnapshots.length ? (
+            filteredSnapshots.map((s) =>
               s.image_url.map((src, i) => (
                 <ProgressPicItem
                   key={`${s.id}-${i}`}
@@ -145,7 +166,7 @@ export const ProgressPicModal: FC<ProgressPicModalProps> = ({
               ))
             )
           ) : (
-            <Center>No progress pictures available.</Center>
+            <Center>No matching progress pictures.</Center>
           )}
         </Stack>
       )}
