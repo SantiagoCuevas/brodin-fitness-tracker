@@ -69,7 +69,16 @@ export const ProgressPicModal: FC<ProgressPicModalProps> = ({
     : (snapshots ?? []);
 
   return (
-    <Modal opened={opened} onClose={close} title="Progress Pictures" fullScreen>
+    <Modal
+      opened={opened}
+      onClose={() => {
+        close();
+        clearComparison();
+        setSearch('');
+      }}
+      title="Progress Pictures"
+      fullScreen
+    >
       {isLoading ? (
         <Center h="100%">
           <Loader />
