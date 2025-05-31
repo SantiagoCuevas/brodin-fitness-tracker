@@ -28,6 +28,8 @@
     "@supabase/supabase-js": "^2.49.8",
     "@tabler/icons-react": "^3.33.0",
     "@tailwindcss/vite": "^4.1.7",
+    "embla-carousel": "^8.5.2",
+    "embla-carousel-react": "^8.5.2",
     "firebase-tools": "^14.4.0",
     "react": "^19.1.0",
     "react-datepicker": "^8.4.0",
