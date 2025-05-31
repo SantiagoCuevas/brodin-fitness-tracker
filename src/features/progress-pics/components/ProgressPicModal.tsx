@@ -9,7 +9,7 @@ import {
   Button,
 } from '@mantine/core';
 import { Carousel } from '@mantine/carousel';
-import { FC, useState } from 'react';
+import { FC, useRef, useState } from 'react';
 import { useSnapshotsWithPics } from '../hooks/useSnapshotsWithPics';
 
 interface ProgressPicModalProps {
@@ -33,18 +33,30 @@ export const ProgressPicModal: FC<ProgressPicModalProps> = ({
   });
   const [showComparisonView, setShowComparisonView] = useState(false);
   const [search, setSearch] = useState('');
+  const comparisonRef = useRef<HTMLDivElement>(null);
 
   const toggleComparison = (src: string) => {
-    setShowComparisonView(false); // Reset view if modifying selection
+    setShowComparisonView(false);
 
     setComparison((prev) => {
-      if (prev.left === src) return { ...prev, left: null };
-      if (prev.right === src) return { ...prev, right: null };
+      const updated = (() => {
+        if (prev.left === src) return { ...prev, left: null };
+        if (prev.right === src) return { ...prev, right: null };
+        if (!prev.left) return { ...prev, left: src };
+        if (!prev.right) return { ...prev, right: src };
+        return { ...prev, right: src };
+      })();
 
-      if (!prev.left) return { ...prev, left: src };
-      if (!prev.right) return { ...prev, right: src };
+      requestAnimationFrame(() => {
+        if ((updated.left || updated.right) && comparisonRef.current) {
+          comparisonRef.current.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start',
+          });
+        }
+      });
 
-      return { ...prev, right: src };
+      return updated;
     });
   };
 
@@ -113,71 +125,87 @@ export const ProgressPicModal: FC<ProgressPicModalProps> = ({
           </Carousel>
         </div>
       ) : (
-        <Stack gap="md">
-          {(comparison.left || comparison.right) && (
-            <div className="flex flex-col gap-2 mb-4 items-center">
-              <div className="flex justify-center items-center gap-4">
-                {comparison.left ? (
-                  <Image
-                    src={comparison.left}
-                    alt="Comparison Left"
-                    w={150}
-                    radius="md"
-                    fit="contain"
-                  />
-                ) : (
-                  <PlaceholderSlot />
-                )}
-                {comparison.right ? (
-                  <Image
-                    src={comparison.right}
-                    alt="Comparison Right"
-                    w={150}
-                    radius="md"
-                    fit="contain"
-                  />
-                ) : (
-                  <PlaceholderSlot />
-                )}
-              </div>
+        <div
+          style={{
+            maxHeight: 'calc(100vh - 80px)',
+            overflowY: 'auto',
+          }}
+        >
+          <Stack gap="md">
+            {(comparison.left || comparison.right) && (
+              <div
+                ref={comparisonRef}
+                className="flex flex-col gap-2 mb-4 items-center"
+              >
+                <div className="flex justify-center items-center gap-4">
+                  {comparison.left ? (
+                    <Image
+                      src={comparison.left}
+                      alt="Comparison Left"
+                      w={150}
+                      radius="md"
+                      fit="contain"
+                    />
+                  ) : (
+                    <PlaceholderSlot />
+                  )}
+                  {comparison.right ? (
+                    <Image
+                      src={comparison.right}
+                      alt="Comparison Right"
+                      w={150}
+                      radius="md"
+                      fit="contain"
+                    />
+                  ) : (
+                    <PlaceholderSlot />
+                  )}
+                </div>
 
-              <div className="flex gap-3">
-                <Button
-                  onClick={() => setShowComparisonView(true)}
-                  disabled={!comparison.left || !comparison.right}
-                >
-                  Compare Now
-                </Button>
-                <Button variant="light" color="gray" onClick={clearComparison}>
-                  Clear
-                </Button>
+                <div className="flex gap-3">
+                  <Button
+                    onClick={() => setShowComparisonView(true)}
+                    disabled={!comparison.left || !comparison.right}
+                  >
+                    Compare Now
+                  </Button>
+                  <Button
+                    variant="light"
+                    color="gray"
+                    onClick={clearComparison}
+                  >
+                    Clear
+                  </Button>
+                </div>
               </div>
-            </div>
-          )}
+            )}
 
-          <Autocomplete
-            label="Search by date"
-            data={allDates}
-            value={search}
-            onChange={setSearch}
-            placeholder="e.g. May 2025"
-          />
-          {filteredSnapshots.length ? (
-            filteredSnapshots.map((s) =>
-              s.image_url.map((src, i) => (
-                <ProgressPicItem
-                  key={`${s.id}-${i}`}
-                  src={src}
-                  date={formatDateToUSLong(s.created_at)}
-                  selected={src === comparison.left || src === comparison.right}
-                  onCompare={() => toggleComparison(src)}
-                />
-              ))
-            )
-          ) : (
-            <Center>No matching progress pictures.</Center>
-          )}
-        </Stack>
+            <Autocomplete
+              label="Search by date"
+              data={allDates}
+              value={search}
+              onChange={setSearch}
+              placeholder="e.g. May 2025"
+            />
+            {filteredSnapshots.length ? (
+              filteredSnapshots.map((s) =>
+                s.image_url.map((src, i) => (
+                  <ProgressPicItem
+                    key={`${s.id}-${i}`}
+                    src={src}
+                    date={formatDateToUSLong(s.created_at)}
+                    selected={
+                      src === comparison.left || src === comparison.right
+                    }
+                    onCompare={() => toggleComparison(src)}
+                  />
+                ))
+              )
+            ) : (
+              <Center>No matching progress pictures.</Center>
+            )}
+          </Stack>
+        </div>
       )}
     </Modal>
   );
