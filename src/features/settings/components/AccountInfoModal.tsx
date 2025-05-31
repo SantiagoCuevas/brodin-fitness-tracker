@@ -43,6 +43,7 @@ export const AccountInfoModal = () => {
       />
     );
   }
+
   return (
     <div className="flex flex-col">
       <AccountInfoDisplay title="Name" value={basicInfo.name} />
