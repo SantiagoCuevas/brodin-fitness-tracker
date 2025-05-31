@@ -1,4 +1,4 @@
-import { Group } from '@mantine/core';
+import { Card, Group } from '@mantine/core';
 import type { FC } from 'react';
 import { Outlet } from 'react-router';
 import {
@@ -14,12 +14,14 @@ export const Layout: FC = () => {
     <>
       <Outlet />
       <div className=" fixed bottom-[20px] w-full px-[40px]">
-        <Group justify="space-between">
-          <NavIcon to="/" Icon={IconBarbell} label="Train" />
-          <NavIcon to="/progress" Icon={IconChartLine} label="Progress" />
-          <NavIcon to="/info" Icon={IconClipboardList} label="Info" />
-          <NavIcon to="/settings" Icon={IconSettings} label="Settings" />
-        </Group>
+        <Card radius={33} withBorder>
+          <Group justify="space-between">
+            <NavIcon to="/" Icon={IconBarbell} label="Train" />
+            <NavIcon to="/progress" Icon={IconChartLine} label="Progress" />
+            <NavIcon to="/info" Icon={IconClipboardList} label="Info" />
+            <NavIcon to="/settings" Icon={IconSettings} label="Settings" />
+          </Group>
+        </Card>
       </div>
     </>
   );
