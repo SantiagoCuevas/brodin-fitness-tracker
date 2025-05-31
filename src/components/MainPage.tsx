@@ -7,6 +7,7 @@ interface MainPageProps {
 
 export const MainPage: FC<MainPageProps & PropsWithChildren> = (props) => {
   const { title, children } = props;
+
   return (
     <div className="flex flex-col p-[16px] pb-[76px] gap-4">
       <Title order={1}>{title}</Title>

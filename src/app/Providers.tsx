@@ -1,9 +1,13 @@
 import { MantineProvider } from '@mantine/core';
 import type { PropsWithChildren } from 'react';
+import { Notifications } from '@mantine/notifications';
 
 export const Providers = (props: PropsWithChildren) => {
   const { children } = props;
   return (
-    <MantineProvider defaultColorScheme="auto">{children}</MantineProvider>
+    <MantineProvider defaultColorScheme="auto">
+      <Notifications />
+      {children}
+    </MantineProvider>
   );
 };

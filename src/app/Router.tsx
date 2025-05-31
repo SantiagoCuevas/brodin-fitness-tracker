@@ -3,6 +3,7 @@ import { Home } from './pages/Home';
 import { PhysiqueTracking } from './pages/PhysiqueTracking';
 import { Settings } from './pages/Settings';
 import { Layout } from '../layouts/Layout';
+import { Progress } from './pages/Progress';
 
 export const Router = () => {
   return (
