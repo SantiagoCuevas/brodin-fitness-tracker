@@ -24,7 +24,6 @@ export const Settings = () => {
     <MainPage title="Settings">
       <DarkModeSwitch />
       <MenuLink title="Account Info" onClick={open} />
-      <MenuLink title="Work Out" onClick={open} />
 
       <Button size="sm" onClick={onSignout}>
         Log Out
