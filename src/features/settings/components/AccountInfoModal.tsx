@@ -33,7 +33,9 @@ export const AccountInfoModal = () => {
         close={() => setEditMode(false)}
         defaultValues={{
           name: basicInfo.name || undefined,
-          display_name: basicInfo.display_name || undefined,
+          display_name: basicInfo.display_name
+            ? '@' + basicInfo.display_name
+            : undefined,
           dob: basicInfo.dob || undefined,
           height_feet: basicInfo.height_feet || undefined,
           height_inches: basicInfo.height_inches || undefined,
