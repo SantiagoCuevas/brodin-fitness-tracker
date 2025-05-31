@@ -2,6 +2,7 @@ import './index.css';
 import '@mantine/core/styles.css';
 import '@mantine/notifications/styles.css';
 import 'react-datepicker/dist/react-datepicker.css';
+import '@mantine/carousel/styles.css';
 import { useAuthSession } from '../hooks/useAuthSession';
 import { Auth } from '@supabase/auth-ui-react';
 import { supabaseClient } from './supabaseClient';
