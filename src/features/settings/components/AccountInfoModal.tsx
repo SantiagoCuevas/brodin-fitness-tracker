@@ -45,7 +45,14 @@ export const AccountInfoModal = () => {
     <div className="flex flex-col">
       <AccountInfoDisplay title="Name" value={basicInfo.name} />
       <AccountInfoDisplay title="Display Name" value={basicInfo.display_name} />
-      <AccountInfoDisplay title="Date Of Birth" value={basicInfo.dob} />
+      <AccountInfoDisplay
+        title="Date Of Birth"
+        value={
+          basicInfo.dob
+            ? new Date(basicInfo.dob).toLocaleDateString()
+            : undefined
+        }
+      />
       <AccountInfoDisplay
         title="Height"
         value={basicInfo.height_feet + "'" + basicInfo.height_inches + '"'}
@@ -169,7 +176,6 @@ const AccountInfoEditor: FC<AccountInfoEditorProps> = (props) => {
               <Text size="sm">Date Of Birth</Text>
               <DatePicker
                 selected={field.value ? new Date(field.value) : new Date()}
-                {...field}
                 onChange={(value) => field.onChange(value)}
               />
             </Stack>
