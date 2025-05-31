@@ -1,4 +1,4 @@
-import { MantineProvider, Notification } from '@mantine/core';
+import { MantineProvider } from '@mantine/core';
 import type { PropsWithChildren } from 'react';
 import { Notifications } from '@mantine/notifications';
 
