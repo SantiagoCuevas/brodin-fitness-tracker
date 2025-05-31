@@ -18,7 +18,11 @@ export const Layout: FC = () => {
           <Group justify="space-between">
             <NavIcon to="/" Icon={IconBarbell} label="Train" />
             <NavIcon to="/progress" Icon={IconChartLine} label="Progress" />
-            <NavIcon to="/info" Icon={IconClipboardList} label="Info" />
+            <NavIcon
+              to="/physique-tracking"
+              Icon={IconClipboardList}
+              label="Physique Tracking"
+            />
             <NavIcon to="/settings" Icon={IconSettings} label="Settings" />
           </Group>
         </Card>
