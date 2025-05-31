@@ -16,7 +16,7 @@ export const Layout: FC = () => {
       <div className=" fixed bottom-[20px] w-full px-[40px]">
         <Group justify="space-between">
           <NavIcon to="/" Icon={IconBarbell} label="Train" />
-          <NavIcon to="/analytics" Icon={IconChartLine} label="Analytics" />
+          <NavIcon to="/progress" Icon={IconChartLine} label="Progress" />
           <NavIcon to="/info" Icon={IconClipboardList} label="Info" />
           <NavIcon to="/settings" Icon={IconSettings} label="Settings" />
         </Group>
