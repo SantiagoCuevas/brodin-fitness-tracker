@@ -1,9 +1,13 @@
 import {
+  Center,
+  Loader,
   LoadingOverlay,
+  MantineProvider,
   NumberInput,
   Stack,
   Text,
   TextInput,
+  Title,
 } from '@mantine/core';
 import { IconEdit } from '@tabler/icons-react';
 import { FC, useState } from 'react';
@@ -13,6 +17,7 @@ import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { BasicInfoUpdate } from '../types/BasicInfo';
 import { useUpdateBasicInfo } from '../hooks/useUpdateBasicInfo';
 import DatePicker from 'react-datepicker';
+import '@mantine/notifications/styles.css';
 
 export const AccountInfoModal = () => {
   const { basicInfo, isLoading } = useBasicInfo();
@@ -25,6 +30,7 @@ export const AccountInfoModal = () => {
   if (editMode) {
     return (
       <AccountInfoEditor
+        close={() => setEditMode(false)}
         defaultValues={{
           name: basicInfo.name || undefined,
           display_name: basicInfo.display_name || undefined,
@@ -75,17 +81,42 @@ const AccountInfoDisplay: FC<AccountInfoDisplayProps> = (props) => {
 
 interface AccountInfoEditorProps {
   defaultValues: BasicInfoUpdate;
+  close: () => void;
 }
 
 const AccountInfoEditor: FC<AccountInfoEditorProps> = (props) => {
-  const { defaultValues } = props;
+  const { defaultValues, close } = props;
   const { register, handleSubmit, control } = useForm<BasicInfoUpdate>({
     defaultValues,
   });
   const { updateBasicInfo } = useUpdateBasicInfo();
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<unknown>(null);
 
-  const onSubmit: SubmitHandler<BasicInfoUpdate> = (data) =>
-    updateBasicInfo(data);
+  const onSubmit: SubmitHandler<BasicInfoUpdate> = async (data) => {
+    try {
+      setLoading(true);
+      await updateBasicInfo(data);
+      close();
+    } catch (err) {
+      setError(err);
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <Center>
+        <Loader />
+      </Center>
+    );
+  }
+
+  if (error) {
+    return <Title>Something went wrong, please try again later.</Title>;
+  }
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
