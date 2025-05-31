@@ -18,6 +18,7 @@ import { BasicInfoUpdate } from '../types/BasicInfo';
 import { useUpdateBasicInfo } from '../hooks/useUpdateBasicInfo';
 import DatePicker from 'react-datepicker';
 import '@mantine/notifications/styles.css';
+import { notifications } from '@mantine/notifications';
 
 export const AccountInfoModal = () => {
   const { basicInfo, isLoading } = useBasicInfo();
@@ -97,9 +98,18 @@ const AccountInfoEditor: FC<AccountInfoEditorProps> = (props) => {
     try {
       setLoading(true);
       await updateBasicInfo(data);
+      notifications.show({
+        title: 'Account Info Updated',
+        message: 'Update successful.',
+      });
       close();
     } catch (err) {
       setError(err);
+      notifications.show({
+        title: 'Account Info Error',
+        message: 'Something went wrong. Please try again later.',
+        color: 'red',
+      });
       console.log(error);
     } finally {
       setLoading(false);
