@@ -2,7 +2,6 @@ import {
   Center,
   Loader,
   LoadingOverlay,
-  MantineProvider,
   NumberInput,
   Stack,
   Text,
