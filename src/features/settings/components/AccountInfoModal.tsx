@@ -61,7 +61,11 @@ export const AccountInfoModal = () => {
       />
       <AccountInfoDisplay
         title="Height"
-        value={basicInfo?.height_feet + "'" + basicInfo?.height_inches + '"'}
+        value={
+          basicInfo
+            ? basicInfo.height_feet + "'" + basicInfo.height_inches + '"'
+            : undefined
+        }
       />
       <Button
         variant="filled"
