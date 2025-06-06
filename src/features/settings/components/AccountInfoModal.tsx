@@ -23,7 +23,7 @@ export const AccountInfoModal = () => {
   const { basicInfo, isLoading } = useBasicInfo();
   const [editMode, setEditMode] = useState(false);
 
-  if (isLoading || !basicInfo) {
+  if (isLoading) {
     return <LoadingOverlay />;
   }
 
@@ -32,13 +32,13 @@ export const AccountInfoModal = () => {
       <AccountInfoEditor
         close={() => setEditMode(false)}
         defaultValues={{
-          name: basicInfo.name || undefined,
-          display_name: basicInfo.display_name
+          name: basicInfo?.name || undefined,
+          display_name: basicInfo?.display_name
             ? '@' + basicInfo.display_name
             : undefined,
-          dob: basicInfo.dob || undefined,
-          height_feet: basicInfo.height_feet || undefined,
-          height_inches: basicInfo.height_inches || undefined,
+          dob: basicInfo?.dob || undefined,
+          height_feet: basicInfo?.height_feet || undefined,
+          height_inches: basicInfo?.height_inches || undefined,
         }}
       />
     );
@@ -46,19 +46,22 @@ export const AccountInfoModal = () => {
 
   return (
     <div className="flex flex-col">
-      <AccountInfoDisplay title="Name" value={basicInfo.name} />
-      <AccountInfoDisplay title="Display Name" value={basicInfo.display_name} />
+      <AccountInfoDisplay title="Name" value={basicInfo?.name} />
+      <AccountInfoDisplay
+        title="Display Name"
+        value={basicInfo?.display_name}
+      />
       <AccountInfoDisplay
         title="Date Of Birth"
         value={
-          basicInfo.dob
+          basicInfo?.dob
             ? new Date(basicInfo.dob).toLocaleDateString()
             : undefined
         }
       />
       <AccountInfoDisplay
         title="Height"
-        value={basicInfo.height_feet + "'" + basicInfo.height_inches + '"'}
+        value={basicInfo?.height_feet + "'" + basicInfo?.height_inches + '"'}
       />
       <Button
         variant="filled"
