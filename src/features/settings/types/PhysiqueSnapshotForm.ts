@@ -1,7 +1,8 @@
 export interface PhysiqueSnapshotForm {
+  user_id: number;
   notes: string;
   weight: number;
-  BodyFat: number;
+  bodyFat: number;
   chest: number;
   waist: number;
   hip: number;

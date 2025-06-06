@@ -13,101 +13,279 @@ import {
 import { MainPage } from '../../components/MainPage';
 import { useDisclosure } from '@mantine/hooks';
 import { useState } from 'react';
+import { Controller, useForm } from 'react-hook-form';
+import { PhysiqueSnapshotForm } from '../../features/settings/types/PhysiqueSnapshotForm';
+import { supabaseClient } from '../supabaseClient';
+import { useBasicInfo } from '../../features/settings/hooks/useBasicInfo';
 
 export const PhysiqueTracking = () => {
   const [opened, { open, close }] = useDisclosure(false);
   const [files, setFile] = useState<File[]>([]);
+  const { handleSubmit, control } = useForm<PhysiqueSnapshotForm>();
+  const currentUser = useBasicInfo();
+
+  const onSubmit = handleSubmit(async (data) => {
+    const { error } = await supabaseClient.from('physique_snapshots').insert([
+      {
+        // user_id: ,
+        note: data.notes,
+        weight_lbs: data.weight, // if your form is in kg, convert here
+        body_fat_percent: data.bodyFat,
+        chest_circumference_cm: data.chest,
+        waist_circumference_cm: data.waist,
+        hip_circumference_cm: data.hip,
+        bicep_left_circumference_cm: data.leftBicep,
+        bicep_right_circumference_cm: data.rightBicep,
+        thigh_left_circumference_cm: data.leftThigh,
+        thigh_right_circumference_cm: data.rightThigh,
+        calf_left_circumference_cm: data.leftCalf,
+        calf_right_circumference_cm: data.rightCalf,
+        neck_circumference_cm: data.neck,
+      },
+    ]);
+
+    console.log(currentUser.basicInfo?.id);
+
+    if (error) {
+      console.error('Error:', error.message);
+      alert('Error saving snapshot.');
+    } else {
+      alert('Snapshot saved!');
+      close();
+    }
+  });
 
   return (
     <MainPage title="Physique Tracking">
       <Modal opened={opened} onClose={close} title={'Add Snapshot'} centered>
-        <Accordion>
-          <Accordion.Item key={'Details'} value={'Details'}>
-            <Accordion.Control>{'Physique Details'}</Accordion.Control>
-            <Accordion.Panel>
-              <Divider size={2} my={'xs'} />
-              <div>
+        <form onSubmit={onSubmit}>
+          <Accordion>
+            <Accordion.Item key={'Details'} value={'Details'}>
+              <Accordion.Control>{'Physique Details'}</Accordion.Control>
+              <Accordion.Panel>
+                <Divider size={2} my={'xs'} />
+
                 <Text>Notes</Text>
-                <Textarea autosize minRows={4} maxRows={10} />
-              </div>
-              <div>
+                <Controller
+                  name="notes"
+                  control={control}
+                  defaultValue=""
+                  render={({ field }) => (
+                    <Textarea {...field} autosize minRows={4} maxRows={10} />
+                  )}
+                />
+
                 <Text>Weight (kg)</Text>
-                <NumberInput min={0} />
-              </div>
-              <div>
+                <Controller
+                  name="weight"
+                  control={control}
+                  defaultValue={0}
+                  rules={{ required: true }}
+                  render={({ field }) => (
+                    <NumberInput
+                      min={0}
+                      {...field}
+                      onChange={(val) => field.onChange(val ?? 0)}
+                    />
+                  )}
+                />
+
                 <Text>Body Fat Percentage</Text>
-                <NumberInput min={0} max={100} />
-              </div>
-            </Accordion.Panel>
-          </Accordion.Item>
-          <Accordion.Item key={'ProgressPic'} value={'ProgressPic'}>
-            <Accordion.Control>{'Progress Picture(s)'}</Accordion.Control>
-            <Accordion.Panel>
-              <Divider size={2} my={'xs'} />
-              <Group justify="center">
-                <FileButton onChange={setFile} accept="image/*" multiple>
-                  {(props) => <Button {...props}>Upload Picture(s)</Button>}
-                </FileButton>
-              </Group>
-              {files.length > 0 && (
-                <Text size="sm" mt="sm">
-                  Selected Photos:
-                </Text>
-              )}
-              <ul>
-                {files.map((file, index) => (
-                  <li key={index}>{file.name}</li>
-                ))}
-              </ul>
-            </Accordion.Panel>
-          </Accordion.Item>
-          <Accordion.Item key={'Measurements'} value={'Body Measurements'}>
-            <Accordion.Control>{'Body Measurements'}</Accordion.Control>
-            <Accordion.Panel>
-              <Divider size={2} my={'xs'} />
-              <div>
+                <Controller
+                  name="bodyFat"
+                  control={control}
+                  defaultValue={0}
+                  render={({ field }) => (
+                    <NumberInput
+                      min={0}
+                      max={100}
+                      {...field}
+                      onChange={(val) => field.onChange(val ?? 0)}
+                    />
+                  )}
+                />
+              </Accordion.Panel>
+            </Accordion.Item>
+            <Accordion.Item key={'ProgressPic'} value={'ProgressPic'}>
+              <Accordion.Control>{'Progress Picture(s)'}</Accordion.Control>
+              <Accordion.Panel>
+                <Divider size={2} my={'xs'} />
+                <Group justify="center">
+                  <FileButton onChange={setFile} accept="image/*" multiple>
+                    {(props) => <Button {...props}>Upload Picture(s)</Button>}
+                  </FileButton>
+                </Group>
+                {files.length > 0 && (
+                  <Text size="sm" mt="sm">
+                    Selected Photos:
+                  </Text>
+                )}
+                <ul>
+                  {files.map((file, index) => (
+                    <li key={index}>{file.name}</li>
+                  ))}
+                </ul>
+              </Accordion.Panel>
+            </Accordion.Item>
+            <Accordion.Item key={'Measurements'} value={'Body Measurements'}>
+              <Accordion.Control>{'Body Measurements'}</Accordion.Control>
+              <Accordion.Panel>
+                <Divider size={2} my={'xs'} />
+
                 <Text>Chest Circumference (cm)</Text>
-                <NumberInput min={0} />
-              </div>
-              <div>
+                <Controller
+                  name="chest"
+                  control={control}
+                  defaultValue={0}
+                  rules={{ required: true }}
+                  render={({ field }) => (
+                    <NumberInput
+                      min={0}
+                      {...field}
+                      onChange={(val) => field.onChange(val ?? 0)}
+                    />
+                  )}
+                />
                 <Text>Waist Circumference (cm)</Text>
-                <NumberInput min={0} />
-              </div>
-              <div>
+                <Controller
+                  name="waist"
+                  control={control}
+                  defaultValue={0}
+                  rules={{ required: true }}
+                  render={({ field }) => (
+                    <NumberInput
+                      min={0}
+                      {...field}
+                      onChange={(val) => field.onChange(val ?? 0)}
+                    />
+                  )}
+                />
+
                 <Text>Hip Circumference (cm)</Text>
-                <NumberInput min={0} />
-              </div>
-              <div>
+                <Controller
+                  name="hip"
+                  control={control}
+                  defaultValue={0}
+                  rules={{ required: true }}
+                  render={({ field }) => (
+                    <NumberInput
+                      min={0}
+                      {...field}
+                      onChange={(val) => field.onChange(val ?? 0)}
+                    />
+                  )}
+                />
+
                 <Text>Left Bicep Circumference (cm)</Text>
-                <NumberInput min={0} />
-              </div>
-              <div>
+                <Controller
+                  name="leftBicep"
+                  control={control}
+                  defaultValue={0}
+                  rules={{ required: true }}
+                  render={({ field }) => (
+                    <NumberInput
+                      min={0}
+                      {...field}
+                      onChange={(val) => field.onChange(val ?? 0)}
+                    />
+                  )}
+                />
+
                 <Text>Right Bicep Circumference (cm)</Text>
-                <NumberInput min={0} />
-              </div>
-              <div>
+                <Controller
+                  name="rightBicep"
+                  control={control}
+                  defaultValue={0}
+                  rules={{ required: true }}
+                  render={({ field }) => (
+                    <NumberInput
+                      min={0}
+                      {...field}
+                      onChange={(val) => field.onChange(val ?? 0)}
+                    />
+                  )}
+                />
                 <Text>Left Thigh Circumference (cm)</Text>
-                <NumberInput min={0} />
-              </div>
-              <div>
+                <Controller
+                  name="leftThigh"
+                  control={control}
+                  defaultValue={0}
+                  rules={{ required: true }}
+                  render={({ field }) => (
+                    <NumberInput
+                      min={0}
+                      {...field}
+                      onChange={(val) => field.onChange(val ?? 0)}
+                    />
+                  )}
+                />
+
                 <Text>Right Thigh Circumference (cm)</Text>
-                <NumberInput min={0} />
-              </div>
-              <div>
+                <Controller
+                  name="rightThigh"
+                  control={control}
+                  defaultValue={0}
+                  rules={{ required: true }}
+                  render={({ field }) => (
+                    <NumberInput
+                      min={0}
+                      {...field}
+                      onChange={(val) => field.onChange(val ?? 0)}
+                    />
+                  )}
+                />
+
                 <Text>Left Calf Circumference (cm)</Text>
-                <NumberInput min={0} />
-              </div>
-              <div>
+                <Controller
+                  name="leftCalf"
+                  control={control}
+                  defaultValue={0}
+                  rules={{ required: true }}
+                  render={({ field }) => (
+                    <NumberInput
+                      min={0}
+                      {...field}
+                      onChange={(val) => field.onChange(val ?? 0)}
+                    />
+                  )}
+                />
+
                 <Text>Right Calf Circumference (cm)</Text>
-                <NumberInput min={0} />
-              </div>
-              <div>
+                <Controller
+                  name="rightCalf"
+                  control={control}
+                  defaultValue={0}
+                  rules={{ required: true }}
+                  render={({ field }) => (
+                    <NumberInput
+                      min={0}
+                      {...field}
+                      onChange={(val) => field.onChange(val ?? 0)}
+                    />
+                  )}
+                />
+
                 <Text>Neck Circumference (cm)</Text>
-                <NumberInput min={0} />
-              </div>
-            </Accordion.Panel>
-          </Accordion.Item>
-        </Accordion>
+                <Controller
+                  name="neck"
+                  control={control}
+                  defaultValue={0}
+                  rules={{ required: true }}
+                  render={({ field }) => (
+                    <NumberInput
+                      min={0}
+                      {...field}
+                      onChange={(val) => field.onChange(val ?? 0)}
+                    />
+                  )}
+                />
+              </Accordion.Panel>
+            </Accordion.Item>
+          </Accordion>
+          <Button onClick={close} type="submit">
+            Add Snapshot
+          </Button>
+        </form>
       </Modal>
       <Button onClick={open}>Add Snapshot</Button>
       <Title order={2}>Snapshots</Title>
