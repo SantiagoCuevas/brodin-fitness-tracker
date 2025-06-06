@@ -17,41 +17,83 @@ import { Controller, useForm } from 'react-hook-form';
 import { PhysiqueSnapshotForm } from '../../features/settings/types/PhysiqueSnapshotForm';
 import { supabaseClient } from '../supabaseClient';
 import { useBasicInfo } from '../../features/settings/hooks/useBasicInfo';
+import { notifications } from '@mantine/notifications';
 
 export const PhysiqueTracking = () => {
   const [opened, { open, close }] = useDisclosure(false);
   const [files, setFile] = useState<File[]>([]);
   const { handleSubmit, control } = useForm<PhysiqueSnapshotForm>();
-  const currentUser = useBasicInfo();
+  const { basicInfo } = useBasicInfo();
+
+  const uploadImageGetUrls = async (files: File[], userId: string) => {
+    const uploadedUrls: string[] = [];
+
+    for (const file of files) {
+      const filePath = `${userId}/${file.name}`;
+      const { error } = await supabaseClient.storage
+        .from('progress-pics')
+        .upload(filePath, file);
+
+      if (error) {
+        console.error('Upload error:', error.message);
+        throw error;
+      }
+
+      const { data: urlData } = supabaseClient.storage
+        .from('progress-pics')
+        .getPublicUrl(filePath);
+
+      uploadedUrls.push(urlData.publicUrl);
+    }
+
+    return uploadedUrls;
+  };
 
   const onSubmit = handleSubmit(async (data) => {
-    const { error } = await supabaseClient.from('physique_snapshots').insert([
-      {
-        // user_id: ,
-        note: data.notes,
-        weight_lbs: data.weight, // if your form is in kg, convert here
-        body_fat_percent: data.bodyFat,
-        chest_circumference_cm: data.chest,
-        waist_circumference_cm: data.waist,
-        hip_circumference_cm: data.hip,
-        bicep_left_circumference_cm: data.leftBicep,
-        bicep_right_circumference_cm: data.rightBicep,
-        thigh_left_circumference_cm: data.leftThigh,
-        thigh_right_circumference_cm: data.rightThigh,
-        calf_left_circumference_cm: data.leftCalf,
-        calf_right_circumference_cm: data.rightCalf,
-        neck_circumference_cm: data.neck,
-      },
-    ]);
+    if (!basicInfo?.user_id) {
+      notifications.show({
+        title: 'Error',
+        message: 'User info is missing',
+      });
+      return;
+    }
 
-    console.log(currentUser.basicInfo?.id);
+    try {
+      const imageUrls = await uploadImageGetUrls(files, basicInfo.user_id);
 
-    if (error) {
-      console.error('Error:', error.message);
-      alert('Error saving snapshot.');
-    } else {
-      alert('Snapshot saved!');
+      const { error } = await supabaseClient.from('physique_snapshots').insert([
+        {
+          user_id: basicInfo.user_id,
+          image_url: imageUrls, // assuming this column is of type text[]
+          note: data.notes,
+          weight_lbs: data.weight,
+          body_fat_percent: data.bodyFat,
+          chest_circumference_cm: data.chest,
+          waist_circumference_cm: data.waist,
+          hip_circumference_cm: data.hip,
+          bicep_left_circumference_cm: data.leftBicep,
+          bicep_right_circumference_cm: data.rightBicep,
+          thigh_left_circumference_cm: data.leftThigh,
+          thigh_right_circumference_cm: data.rightThigh,
+          calf_left_circumference_cm: data.leftCalf,
+          calf_right_circumference_cm: data.rightCalf,
+          neck_circumference_cm: data.neck,
+        },
+      ]);
+
+      if (error) throw error;
+
+      notifications.show({
+        title: 'Snapshot successfully saved',
+        message: 'Snapshot saved',
+      });
       close();
+    } catch (error) {
+      console.error('Error:', error);
+      notifications.show({
+        title: 'ERROR',
+        message: 'Please try again',
+      });
     }
   });
 

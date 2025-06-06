@@ -1,5 +1,6 @@
 export interface PhysiqueSnapshotForm {
   user_id: number;
+  image_url: [string];
   notes: string;
   weight: number;
   bodyFat: number;
